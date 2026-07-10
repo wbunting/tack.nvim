@@ -1,0 +1,34 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Neovim (stable)
+        uses: rhysd/action-setup-vim@v1
+        with:
+          neovim: true
+          version: stable
+
+      - name: Load plugin & register commands
+        run: |
+          nvim --headless -u NONE \
+            -c "lua vim.opt.rtp:append(vim.fn.getcwd())" \
+            -c "lua for _,m in ipairs({'config','git','parse','render','store','comment','ui','syntax','annotate'}) do require('tack.'..m) end" \
+            -c "lua require('tack').setup({})" \
+            -c "lua assert(vim.fn.exists(':TackReview') == 2, 'TackReview not registered')" \
+            -c "lua print('tack.nvim loaded OK')" \
+            -c "qa!"
+
+      - name: Syntax-check the agent hook (python)
+        run: python3 -m py_compile agents/tack-hook.py
+
+      - name: Syntax-check the opencode plugin (node)
+        run: node --check agents/opencode/tack/plugin.js

@@ -1,0 +1,22 @@
+name: Feature request
+description: Suggest an improvement to tack.nvim
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What's the use case?
+      description: The workflow or problem this would help with.
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: Proposed behavior
+      description: What you'd like tack to do (commands, config, integration, …).
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered

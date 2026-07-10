@@ -1,0 +1,6 @@
+# Review sidecar (created when dogfooding tack.nvim on this repo)
+.tack/
+
+# Editor / OS cruft
+*.swp
+.DS_Store

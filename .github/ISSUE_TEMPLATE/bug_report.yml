@@ -1,0 +1,35 @@
+name: Bug report
+description: Something in tack.nvim isn't working
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What you expected vs what actually happened. Include `:messages` if relevant.
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Minimal repro
+      description: A tiny git repo + the exact steps (`:TackReview`, select lines, `c`, …).
+      placeholder: |
+        1. mkdir /tmp/t && cd /tmp/t && git init && ...
+        2. nvim -c TackReview
+        3. ...
+    validations:
+      required: true
+  - type: textarea
+    id: env
+    attributes:
+      label: Environment
+      description: Output of `nvim --version`, your OS, and your tack config.
+      render: text
+    validations:
+      required: true
+  - type: input
+    id: view
+    attributes:
+      label: view / base
+      description: e.g. view="split", base="auto"

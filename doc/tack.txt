@@ -1,0 +1,76 @@
+*tack.txt*   Clean diff review with agent-readable comments
+
+==============================================================================
+INTRODUCTION                                                      *tack.nvim*
+
+tack.nvim shows a clean, hunk.dev-style diff of your working tree inside a
+Neovim buffer and lets you leave inline comments by visual-selecting lines.
+Comments are persisted to a JSON sidecar (|tack-sidecar|) that a coding agent
+can read and act on.
+
+No daemon or background process is involved.
+
+==============================================================================
+COMMANDS                                                       *tack-commands*
+
+								*:TackReview*
+:TackReview [{base}]	Open the diff review. Without {base} (base="auto"),
+			shows everything since you branched off trunk
+			(committed + uncommitted). {base} may also be HEAD,
+			a ref, or an "a...b" range.
+
+								*:TackReload*
+:TackReload		Re-run the diff and repaint. Comments are preserved.
+
+								*:TackComments*
+:TackComments		Put every stored comment into the quickfix list,
+			pointing at the real source file/line.
+
+								*:TackComment*
+:[range]TackComment	Comment on [range] (or the current line). Usually
+			invoked via the `c` keymap from visual mode.
+
+								*:TackClear*
+:TackClear [{file}]	Remove all comments, or only those for {file}.
+
+==============================================================================
+KEYMAPS (review buffer)                                         *tack-keymaps*
+
+c		Comment the visual selection / current line
+dc		Remove the comment under the cursor
+gc		Open all comments in the quickfix list
+R		Reload the diff
+]h / [h		Next / previous hunk
+]c / [c		Next / previous comment
+q		Close the review window
+
+==============================================================================
+SIDECAR                                                         *tack-sidecar*
+
+Comments are written to `.tack/review.json` at the git root (configurable via
+the `sidecar` option). Each comment records filePath, side ("new"/"old"),
+newLine|oldLine, lineStart/lineEnd, summary, optional rationale, author and
+status. The newLine/oldLine fields match hunk.dev's comment schema.
+
+Point your agent at skills/tack-comments/SKILL.md to have it pick up and
+execute the comments, then mark them resolved.
+
+==============================================================================
+CONFIGURATION                                                   *tack-config*
+
+>lua
+    require("tack").setup({
+      base = "auto",         -- merge-base with trunk; or "HEAD"/ref/range
+      trunk = { "main", "master", "trunk" },
+      sidecar = ".tack/review.json",
+      author = "user",
+      context_lines = 3,
+      include_untracked = true,
+      view = "split",        -- "split" (side-by-side) | "unified"
+      layout = "tab",
+      prompt_rationale = false,
+    })
+<
+setup() is optional; commands work with defaults.
+
+vim:tw=78:ts=8:noet:ft=help:norl:
